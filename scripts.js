@@ -52,12 +52,15 @@ const transactions = [
 const Transaction = {
     incomes() {
         //somar as entradas
+        return "Cheguei"
     },
     expenses() {
         //somar as saídas
+        return "Aqui"
     },
     total() {
         // entradas - saídas
+        return "Discover"
     }
 }
 
@@ -98,13 +101,13 @@ const DOM = {
     updateBalance() {
         document
             .getElementById('incomeDisplay')
-            .innerHTML = "Soma das entradas"
+            .innerHTML = Transaction.incomes()
         document
             .getElementById('expenseDisplay')
-            .innerHTML = "Soma das saídas"
+            .innerHTML = Transaction.expenses()
         document
             .getElementById('totalDisplay')
-            .innerHTML = "Total" 
+            .innerHTML = Transaction.total()
     }
 }
 
