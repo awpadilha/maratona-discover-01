@@ -17,32 +17,6 @@ const Modal = {
     }
 }
 
-const transactions = [
-    {
-        id: 1,
-        description: 'Luz',
-        amount: -50000,
-        date: '23/01/2021'
-    },
-    {
-        id: 2,
-        description: 'Website',
-        amount: 500000,
-        date: '23/01/2021'
-    },
-    {
-        id: 3,
-        description: 'Internet',
-        amount: -20000,
-        date: '23/01/2021'
-    },
-    {
-        id: 4,
-        description: 'App',
-        amount: 200000,
-        date: '23/01/2021'
-    },
-]
 
 //Eu preciso somar as entradas
 //depois eu preciso somas as saidas e 
@@ -50,9 +24,31 @@ const transactions = [
 //assim, eu terei o total
 
 const Transaction = {
-    all: transactions,
+    all: [
+        {
+            description: 'Luz',
+            amount: -50000,
+            date: '23/01/2021',
+        },
+        {
+            description: 'Website',
+            amount: 500000,
+            date: '23/01/2021',
+        },
+        {
+            description: 'Internet',
+            amount: -20000,
+            date: '23/01/2021',
+        },
+        {
+            description: 'App',
+            amount: 200000,
+            date: '23/01/2021',
+        },
+    ]
+    ,
     
-    add(transaction) {
+    add(transaction){
         Transaction.all.push(transaction)
 
         App.reload()
@@ -162,6 +158,47 @@ const Utils = {
     }
 }
 
+const Form = {
+    description: document.querySelector('input#description'),
+    amount: document.querySelector('input#amount'),
+    date: document.querySelector('input#date'),
+
+    getValues() {
+        return {
+            description: Form.description.value,
+            amount: Form.amount.value,
+            date: Form.date.value,
+        }
+    },
+    
+    validateFields() {
+        const {description, amount, date} = Form.getValues()
+      
+        if (description.trim() === "" || 
+            amount.trim() === "" ||
+            date.trim() === "" ){
+                throw new Error("Por favor, preencha todos os campos")
+            }
+        },
+
+    submit(event) {
+        event.preventDefault()
+
+        try {
+            Form.validateFields()
+            // formatar os dados para salvar
+            // salvar
+            // apagar os dados do formulário
+            // modal feche
+            // atualizar a aplicação 
+            
+        } catch (error) {
+            alert(error.message)
+        }
+        
+        
+    }
+}
 
 
 const App = {
@@ -179,6 +216,5 @@ const App = {
     },
 }
 
-App.init()
 
-Transaction.remove(0)
+App.init()
