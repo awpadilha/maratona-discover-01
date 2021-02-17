@@ -100,11 +100,10 @@ const DOM = {
     addTransaction(transaction, index) {
         console.log(transaction)
         const tr = document.createElement('tr')
-        tr.innerHTML = DOM.innerHTMLTransaction(transaction)
+        tr.innerHTML = DOM.innerHTMLTransaction(transaction, index)
+        tr.dataset.index = index
 
         DOM.transactionsContainer.appendChild(tr)
-
-        
     },
     
     innerHTMLTransaction(transaction) {
@@ -118,7 +117,7 @@ const DOM = {
             <td class="${CSSclass}">${amount}</td>
             <td class="date">${transaction.date}</td>
             <td>
-                <img src="./assets/minus.svg" alt="Remover transação">
+                <img onclick="Transaction.remove(${index})"src="./assets/minus.svg" alt="Remover transação">
             </td>
         </tr>
         `
@@ -136,12 +135,28 @@ const DOM = {
         document
             .getElementById('totalDisplay')
             .innerHTML = Utils.formatCurrency(Transaction.total()) 
+    },
+
+    clearTransactions() {
+        DOM.transactionsContainer.innerHTML = ""
     }
 }
 
 
 
 const Utils = {
+    formatAmount(value){
+        value = Number(value) * 100
+        console.log(value)
+
+        return value
+    },
+
+    formatDate(date) {
+        const splittedDate = date.split("-")
+        return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
+    },
+
     formatCurrency(value) {
         const signal = Number(value) < 0 ? "-" : ""
 
@@ -181,17 +196,39 @@ const Form = {
             }
         },
 
+    formatValues() {
+        let {description, amount, date} = Form.getValues()
+
+            amount = Utils.formatAmount(amount)
+
+            date = Utils.formatDate(date)
+
+            return {
+                description,
+                amount,
+                date
+            }
+    },
+
+    clearFields() {
+        Form.description.value = ""
+        Form.amount.value = ""
+        Form.date.value = ""
+    },
+
     submit(event) {
         event.preventDefault()
 
         try {
             Form.validateFields()
             // formatar os dados para salvar
+            const transaction = Form.formatValues()
             // salvar
+            Transaction.add(transaction)
             // apagar os dados do formulário
+            Form.clearFields()
             // modal feche
-            // atualizar a aplicação 
-            
+            Modal.close()
         } catch (error) {
             alert(error.message)
         }
@@ -203,8 +240,8 @@ const Form = {
 
 const App = {
     init() {
-        Transaction.all.forEach(transaction => {
-            DOM.addTransaction(transaction)
+        Transaction.all.forEach(functiontransaction, index => {
+            DOM.addTransaction(transaction, index)
         })
 
         DOM.updateBalance()
