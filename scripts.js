@@ -17,36 +17,23 @@ const Modal = {
     }
 }
 
-
 //Eu preciso somar as entradas
 //depois eu preciso somas as saidas e 
 //remover das entradas o valor das saídas
 //assim, eu terei o total
 
+const Storage = {
+    get() {
+         return JSON.parse(localStorage.getItem("dev.finances:transactions")) || []
+    },
+
+    set(transactions) {
+        localStorage.setItem("dev.finances:transactions", JSON.stringify(transactions))
+    }
+}
+
 const Transaction = {
-    all: [
-        {
-            description: 'Luz',
-            amount: -50000,
-            date: '23/01/2021',
-        },
-        {
-            description: 'Website',
-            amount: 500000,
-            date: '23/01/2021',
-        },
-        {
-            description: 'Internet',
-            amount: -20000,
-            date: '23/01/2021',
-        },
-        {
-            description: 'App',
-            amount: 200000,
-            date: '23/01/2021',
-        },
-    ]
-    ,
+    all: Storage.get(),
     
     add(transaction){
         Transaction.all.push(transaction)
@@ -98,7 +85,6 @@ const DOM = {
     transactionsContainer: document.querySelector('#data-table tbody'),
 
     addTransaction(transaction, index) {
-        console.log(transaction)
         const tr = document.createElement('tr')
         tr.innerHTML = DOM.innerHTMLTransaction(transaction, index)
         tr.dataset.index = index
@@ -106,20 +92,18 @@ const DOM = {
         DOM.transactionsContainer.appendChild(tr)
     },
     
-    innerHTMLTransaction(transaction) {
+    innerHTMLTransaction(transaction, index) {
         const CSSclass = transaction.amount > 0 ? "income" : "expense"
        
         const amount = Utils.formatCurrency(transaction.amount)
 
         const html = `
-        <tr>
             <td class="description">${transaction.description}</td>
             <td class="${CSSclass}">${amount}</td>
             <td class="date">${transaction.date}</td>
             <td>
                 <img onclick="Transaction.remove(${index})"src="./assets/minus.svg" alt="Remover transação">
             </td>
-        </tr>
         `
 
         return html
@@ -141,8 +125,6 @@ const DOM = {
         DOM.transactionsContainer.innerHTML = ""
     }
 }
-
-
 
 const Utils = {
     formatAmount(value){
@@ -237,21 +219,19 @@ const Form = {
     }
 }
 
-
-const App = {
+const App = { 
     init() {
-        Transaction.all.forEach(functiontransaction, index => {
-            DOM.addTransaction(transaction, index)
-        })
+        Transaction.all.forEach(DOM.addTransaction)
 
         DOM.updateBalance()
 
+        Storage.set(Transaction.all)
+           
     },
     reload() {
         DOM.clearTransactions()
-        App.init()
+        App.init() 
     },
 }
-
 
 App.init()
