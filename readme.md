@@ -15,4 +15,6 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 Desenvolvimento da aplicação Dev.Finance$ das aulas da Maratona Discover da Rockeatseat.
 
+## :TADA: CONCLUÍDO :TADA:
+
 https://maratonadiscover.rocketseat.com.br/inscricao
